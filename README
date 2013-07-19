@@ -1,2 +1,10 @@
 Autor Gonzalo Fleitas Pastor
 Copyright 2013
+
+MODO DE USO:
+   Para poder descargar links de rapidshare debemos configurar la lista de links en el archivo links.list.
+   Luego ejecutar el comando ./rapiddown y los archivos comenzaran a descargarse dentro de la carpeta "files"
+
+   Para descargar un solo archivo sin usar la lista, podemos usar el comando download de la siguiente manera:
+
+   ./download url_de_rapidshare
