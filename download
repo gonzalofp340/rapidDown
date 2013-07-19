@@ -1,0 +1,47 @@
+#!/usr/bin/python
+
+import httplib2, re, os, sys
+import proxy_config
+
+http_proxy= proxy_config.http_proxy
+ftp_proxy = proxy_config.ftp_proxy
+
+path= "files/"
+
+if len(sys.argv) != 2:
+	print "Error de parametros"
+	exit(0)
+	
+try:
+
+	# url para descargar
+	url_init= sys.argv[1]
+
+	headers, content = httplib2.Http(disable_ssl_certificate_validation=True).request(url_init)
+
+	if headers.status == 200:
+		
+		res= re.match(".*location=\"(.*)\".*", content)
+		url= res.group(1)
+		res= re.match("https:\/\/rapidshare.com\/#!(\\w*)\|(\\w*)\|(\\w*)\|(.*)", url)
+		filename= res.group(4).split("|")
+		filename= filename[0]
+		url_download= "http://rs"+str(res.group(2))+".rapidshare.com/cgi-bin/rsapi.cgi?sub="+str(res.group(1))+"&fileid="+str(res.group(3))+"&filename="+str(filename)+"&directstart=1"
+		
+		wget_command= "wget -c --user-agent=Firefox \""+str(url_download)+"\" -O "+path+str(filename)
+		print "\n\nComenzando la descarga de "+str(filename)+"...\nPor favor, espere.\n\n\n"
+		
+		# Seteo las propiedades de los proxys
+		if(http_proxy != ""):
+			os.environ['http_proxy']= http_proxy
+		if(ftp_proxy != ""):
+			os.environ['ftp_proxy']= ftp_proxy
+			
+		os.system(wget_command)
+		
+	else:
+		print "Error en la peticion"
+
+
+except httplib2.RelativeURIError:
+	print "Error en la url"

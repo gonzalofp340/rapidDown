@@ -1,0 +1,20 @@
+#!/usr/bin/python
+
+import os
+
+f = open("links.list")
+lines= f.read().split("\n")
+
+links=[]
+
+# Recorro las lineas del archivo para obtener los links de descarga
+for l in lines:
+	if len(l) > 0:
+		if(l[0] != "#"):
+			links.append(l);
+
+# Recorro los links para descargarlos
+for lk in links:
+	command="./download \""+lk+"\""
+	print "\nURL: "+lk
+	os.system(command)
